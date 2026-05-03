@@ -7,6 +7,7 @@ import MachineStatus from "@/components/dashboard/MachineStatus"
 import AlertsPanel from "@/components/dashboard/AlertPanel"
 import LiveJobs from "@/components/dashboard/LiveJobs"
 import RevenueChart from "@/components/dashboard/RevenueChart"
+import API_BASE from "@/lib/api";
 
 export default function Dashboard() {
 
@@ -16,7 +17,7 @@ export default function Dashboard() {
     jobsToday: 0,
     revenueToday: 0
   })
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+  // const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   useEffect(() => {
     axios.get(`${API_BASE}/api/admin/stats`)
       .then(res => setStats(res.data))
