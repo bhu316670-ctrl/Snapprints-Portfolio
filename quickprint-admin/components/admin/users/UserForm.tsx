@@ -10,11 +10,12 @@ import userService, {
 interface Props {
   user?: User;
 }
-const [assignedMachines, setAssignedMachines] =
-  useState<string[]>([]);
+
 export default function UserForm({
   user,
 }: Props) {
+  const [assignedMachines, setAssignedMachines] =
+  useState<string[]>([]);
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);

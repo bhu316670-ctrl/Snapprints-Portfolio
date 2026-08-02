@@ -8,7 +8,7 @@ export interface Machine {
   revenue: number;
 }
 
-export let machines: Machine[] = [
+export const machines: Machine[] = [
   {
     id: 1,
     machineId: "SNP001",

@@ -16,7 +16,7 @@ export interface User {
   assignedMachines: string[];
 }
 
-export let users: User[] = [
+export const users: User[] = [
   {
     id: 1,
     fullName: "Bhushan Jadhav",
