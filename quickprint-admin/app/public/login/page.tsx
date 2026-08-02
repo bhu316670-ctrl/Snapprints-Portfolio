@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,11 +30,15 @@ export default function LoginPage() {
       });
 
       router.push("/user/dashboard");
-    } catch (err: any) {
-      setError(
-        err?.response?.data?.message ||
-          "Invalid email or password"
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ??
+            "Invalid email or password"
+        );
+      } else {
+        setError("Something went wrong.");
+      }
     } finally {
       setLoading(false);
     }
