@@ -2,104 +2,105 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { mockUsers } from "@/lib/auth";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
 
+  const { loginAsUser } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const login = (e: React.FormEvent) => {
+  async function login(e: React.FormEvent) {
     e.preventDefault();
 
     setError("");
+    setLoading(true);
 
-    const user = mockUsers.find(
-      (u) =>
-        u.email === email.trim() &&
-        u.password === password.trim()
-    );
+    try {
+      await loginAsUser({
+        email,
+        password,
+      });
 
-    if (!user) {
-      setError("Invalid email or password");
-      return;
+      router.push("/user/dashboard");
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ||
+          "Invalid email or password"
+      );
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        email: user.email,
-        role: user.role,
-      })
-    );
-
-    router.push(user.redirect);
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
       <form
         onSubmit={login}
-        className="bg-white shadow-md rounded-lg p-8 w-[400px]"
+        className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md"
       >
-
-        <h1 className="text-3xl font-bold mb-6 text-center">
+        <h1 className="text-3xl font-bold text-center mb-8">
           SnapPrint Login
         </h1>
 
-        <div className="mb-4">
-          <label className="block mb-2">
+        <div className="mb-5">
+          <label className="block mb-2 font-medium">
             Email
           </label>
 
           <input
             type="email"
-            className="border rounded w-full p-2"
+            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your email"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-2">
+        <div className="mb-5">
+          <label className="block mb-2 font-medium">
             Password
           </label>
 
           <input
             type="password"
-            className="border rounded w-full p-2"
+            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 
         {error && (
-          <p className="text-red-600 mb-4">
+          <div className="mb-4 rounded-lg bg-red-100 border border-red-300 text-red-600 p-3">
             {error}
-          </p>
+          </div>
         )}
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 transition disabled:opacity-50"
         >
-          Login
+          {loading ? "Signing In..." : "Login"}
         </button>
 
-        <div className="mt-4 text-center">
+        <div className="text-center mt-6">
           <a
             href="/public/forgot-password"
-            className="text-blue-600 text-sm"
+            className="text-blue-600 hover:underline"
           >
             Forgot Password?
           </a>
         </div>
-
       </form>
-
     </div>
   );
 }

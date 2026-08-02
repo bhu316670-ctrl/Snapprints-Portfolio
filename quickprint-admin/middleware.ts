@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
       );
     }
 
-    if (role !== "admin") {
+    if (role !== "SUPER_ADMIN") {
       return NextResponse.redirect(
         new URL("/user/dashboard", request.url)
       );
@@ -50,7 +50,7 @@ export function middleware(request: NextRequest) {
       );
     }
 
-    if (role !== "user") {
+    if (role !== "users") {
       return NextResponse.redirect(
         new URL("/admin/dashboard", request.url)
       );
