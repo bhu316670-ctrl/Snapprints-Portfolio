@@ -2,29 +2,34 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AssignMachine from "./AssignMachines";
+import userService, {
+  User,
+} from "@/services/user.service";
 
-import { User, users } from "@/lib/dummyUsers";
-import { machines } from "@/lib/dummyData";
-
-interface UserFormProps {
+interface Props {
   user?: User;
 }
-
-export default function UserForm({ user }: UserFormProps) {
+const [assignedMachines, setAssignedMachines] =
+  useState<string[]>([]);
+export default function UserForm({
+  user,
+}: Props) {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
-    fullName: user?.fullName ?? "",
+    full_name: user?.full_name ?? "",
     email: user?.email ?? "",
     phone: user?.phone ?? "",
-    company: user?.company ?? "",
-    address: user?.address ?? "",
-    status: user?.status ?? "Active",
-    assignedMachines: user?.assignedMachines ?? [],
+    business_name: user?.business_name ?? "",
+    gst_number: user?.gst_number ?? "",
+    password: "",
   });
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) {
     setForm({
       ...form,
@@ -32,168 +37,166 @@ export default function UserForm({ user }: UserFormProps) {
     });
   }
 
-  function toggleMachine(machineId: string) {
-    const exists = form.assignedMachines.includes(machineId);
-
-    if (exists) {
-      setForm({
-        ...form,
-        assignedMachines: form.assignedMachines.filter(
-          (m) => m !== machineId
-        ),
-      });
-    } else {
-      setForm({
-        ...form,
-        assignedMachines: [...form.assignedMachines, machineId],
-      });
-    }
-  }
-
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(
+    e: React.FormEvent
+  ) {
     e.preventDefault();
 
-    if (user) {
-      const index = users.findIndex((u) => u.id === user.id);
+    setLoading(true);
 
-      users[index] = {
-        ...user,
-        ...form,
-      };
+    try {
+      if (user) {
+        await userService.updateUser(user.id, {
+  full_name: form.full_name,
+  email: form.email,
+  phone: form.phone,
+  business_name: form.business_name,
+  gst_number: form.gst_number,
+  assignedMachines,
+});
 
-      alert("User Updated");
-    } else {
-      users.push({
-        id: users.length + 1,
-        ...form,
-      });
+        alert("User updated successfully.");
+      } else {
+        await userService.createUser({
+  full_name: form.full_name,
+  email: form.email,
+  phone: form.phone,
+  business_name: form.business_name,
+  gst_number: form.gst_number,
+  password: form.password,
+  assignedMachines,
+});
 
-      alert("User Created");
+        alert("User created successfully.");
+      }
+
+      router.push("/admin/users");
+    } catch (err) {
+      console.error(err);
+      alert("Unable to save user.");
+    } finally {
+      setLoading(false);
     }
-
-    router.push("/admin/users");
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 max-w-2xl"
+      className="max-w-2xl bg-white rounded-xl border p-8 space-y-6"
     >
+      <h2 className="text-xl font-semibold">
+        {user ? "Edit User" : "Create User"}
+      </h2>
+
       <div>
-        <label>Full Name</label>
+        <label className="block mb-2">
+          Full Name
+        </label>
 
         <input
-          className="border rounded w-full p-2"
-          name="fullName"
-          value={form.fullName}
+          name="full_name"
+          value={form.full_name}
           onChange={handleChange}
+          className="w-full border rounded-lg p-3"
+          required
         />
       </div>
 
       <div>
-        <label>Email</label>
+        <label className="block mb-2">
+          Email
+        </label>
 
         <input
-          className="border rounded w-full p-2"
+          type="email"
           name="email"
           value={form.email}
           onChange={handleChange}
+          className="w-full border rounded-lg p-3"
+          required
         />
       </div>
 
       <div>
-        <label>Phone</label>
+        <label className="block mb-2">
+          Phone
+        </label>
 
         <input
-          className="border rounded w-full p-2"
           name="phone"
-          value={form.phone}
+          value={form.phone ?? ""}
           onChange={handleChange}
+          className="w-full border rounded-lg p-3"
         />
       </div>
 
       <div>
-        <label>Company</label>
+        <label className="block mb-2">
+          Business Name
+        </label>
 
         <input
-          className="border rounded w-full p-2"
-          name="company"
-          value={form.company}
+          name="business_name"
+          value={form.business_name ?? ""}
           onChange={handleChange}
+          className="w-full border rounded-lg p-3"
         />
       </div>
 
       <div>
-        <label>Address</label>
+        <label className="block mb-2">
+          GST Number
+        </label>
 
         <input
-          className="border rounded w-full p-2"
-          name="address"
-          value={form.address}
+          name="gst_number"
+          value={form.gst_number ?? ""}
           onChange={handleChange}
+          className="w-full border rounded-lg p-3"
         />
       </div>
 
-      <div>
-        <label>Status</label>
+      {!user && (
+        <div>
+          <label className="block mb-2">
+            Password
+          </label>
 
-        <select
-          className="border rounded w-full p-2"
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-        >
-          <option>Active</option>
-          <option>Inactive</option>
-        </select>
-      </div>
-
-      <div>
-        <h3 className="font-semibold text-lg mb-3">
-          Assign Machines
-        </h3>
-
-        <div className="border rounded-lg p-4 space-y-2">
-
-          {machines.map((machine) => (
-            <label
-              key={machine.id}
-              className="flex items-center gap-3"
-            >
-              <input
-                type="checkbox"
-                checked={form.assignedMachines.includes(machine.machineId)}
-                onChange={() => toggleMachine(machine.machineId)}
-              />
-
-              <span>
-                {machine.machineId} - {machine.name}
-              </span>
-
-            </label>
-          ))}
-
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+            required
+          />
         </div>
-      </div>
+      )}
 
-      <div className="flex gap-3">
-
+      <div className="flex justify-end gap-3">
         <button
           type="button"
           onClick={() => router.back()}
-          className="border px-5 py-2 rounded"
+          className="border px-5 py-3 rounded-lg"
         >
           Cancel
         </button>
-
+      <AssignMachine
+  value={assignedMachines}
+  onChange={setAssignedMachines}
+/>
         <button
-          className="bg-blue-600 text-white px-5 py-2 rounded"
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg"
         >
-          Save User
+          {loading
+            ? "Saving..."
+            : user
+            ? "Update User"
+            : "Create User"}
         </button>
-
       </div>
-
     </form>
   );
 }

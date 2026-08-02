@@ -1,15 +1,20 @@
+"use client";
+
 import Link from "next/link";
+
+import useUsers from "@/hooks/useUsers";
 
 import UserTable from "@/components/admin/users/UserTable";
 import PageHeader from "@/components/ui/PageHeader";
 
 export default function UsersPage() {
-  return (
-    <div>
+  const { users, loading } = useUsers();
 
+  return (
+    <div className="space-y-6">
       <PageHeader
         title="Users"
-        description="Manage registered users and assigned machines."
+        description="Manage registered users."
         action={
           <Link
             href="/admin/users/add"
@@ -20,8 +25,10 @@ export default function UsersPage() {
         }
       />
 
-      <UserTable />
-
+      <UserTable
+        users={users}
+        loading={loading}
+      />
     </div>
   );
 }

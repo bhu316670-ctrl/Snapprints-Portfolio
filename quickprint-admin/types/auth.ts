@@ -1,16 +1,14 @@
-export type UserType = "ADMIN" | "USER";
+export type UserRole = "admin" | "user";
 
 export interface User {
   id: number;
 
-  name?: string;
-  full_name?: string;
+  name?: string;        // Admin
+  fullName?: string;    // User
 
   email: string;
 
-  role?: "ADMIN";
-
-  type: UserType;
+  role: UserRole;
 }
 
 export interface LoginRequest {

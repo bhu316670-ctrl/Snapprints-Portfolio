@@ -1,15 +1,15 @@
+import PageHeader from "@/components/ui/PageHeader";
 import UserForm from "@/components/admin/users/UserForm";
 
 export default function AddUserPage() {
   return (
-    <div>
-
-      <h1 className="text-3xl font-bold mb-6">
-        Add User
-      </h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="Add User"
+        description="Create a new SnapPrint user."
+      />
 
       <UserForm />
-
     </div>
   );
 }

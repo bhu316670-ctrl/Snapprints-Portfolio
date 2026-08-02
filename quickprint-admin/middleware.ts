@@ -6,10 +6,11 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Public routes
+  // Public pages
   const publicRoutes = [
-    "/admin-login",
-    "/user-login",
+    "/public/login",
+    "/public/admin-login",
+    "/public/forgot-password",
   ];
 
   // Already logged in
@@ -27,32 +28,32 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Protect Admin Routes
+  // Protect Admin Pages
   if (pathname.startsWith("/admin")) {
     if (!token) {
       return NextResponse.redirect(
-        new URL("/admin-login", request.url)
+        new URL("/public/admin-login", request.url)
       );
     }
 
-    if (role !== "SUPER_ADMIN") {
+    if (role !== "admin") {
       return NextResponse.redirect(
-        new URL("/user/dashboard", request.url)
+        new URL("/public/login", request.url)
       );
     }
   }
 
-  // Protect User Routes
+  // Protect User Pages
   if (pathname.startsWith("/user")) {
     if (!token) {
       return NextResponse.redirect(
-        new URL("/user-login", request.url)
+        new URL("/public/login", request.url)
       );
     }
 
-    if (role !== "users") {
+    if (role !== "user") {
       return NextResponse.redirect(
-        new URL("/admin/dashboard", request.url)
+        new URL("/public/admin-login", request.url)
       );
     }
   }
@@ -64,7 +65,8 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/user/:path*",
-    "/admin-login",
-    "/user-login",
+    "/public/login",
+    "/public/admin-login",
+    "/public/user-login",
   ],
 };

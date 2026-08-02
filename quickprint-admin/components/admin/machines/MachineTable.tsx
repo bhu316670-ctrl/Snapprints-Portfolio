@@ -33,7 +33,9 @@ export default function MachineTable({
 
       machine.location_name.toLowerCase().includes(value) ||
 
-      machine.city?.toLowerCase().includes(value) ||
+     (machine.city ?? "")
+  .toLowerCase()
+  .includes(value)||
 
       machine.state?.toLowerCase().includes(value)
 

@@ -1,8 +1,5 @@
 import api from "@/lib/axios";
-import {
-  LoginResponse,
-  User,
-} from "@/types/auth";
+import { LoginResponse, User } from "@/types/auth";
 
 class AuthService {
   async adminLogin(
@@ -18,6 +15,10 @@ class AuthService {
     );
 
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    document.cookie = `token=${data.token}; path=/`;
+    document.cookie = `role=${data.user.role}; path=/`;
 
     return data;
   }
@@ -35,6 +36,10 @@ class AuthService {
     );
 
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    document.cookie = `token=${data.token}; path=/`;
+    document.cookie = `role=${data.user.role}; path=/`;
 
     return data;
   }
@@ -48,12 +53,19 @@ class AuthService {
     return data;
   }
 
-  async logout(): Promise<void> {
+  async logout() {
     try {
       await api.post("/auth/logout");
-    } catch (_) {}
+    } catch {}
 
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    document.cookie =
+      "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+
+    document.cookie =
+      "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
   }
 }
 

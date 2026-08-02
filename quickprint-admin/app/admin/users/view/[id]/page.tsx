@@ -1,27 +1,33 @@
 import { notFound } from "next/navigation";
+
+import PageHeader from "@/components/ui/PageHeader";
 import UserDetails from "@/components/admin/users/UserDetails";
-import { users } from "@/lib/dummyUsers";
+
+import userService from "@/services/user.service";
+
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
 export default async function ViewUserPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: Props) {
   const { id } = await params;
 
-  const user = users.find(
-    (user) => user.id === Number(id)
-  );
+  const user = await userService.getUser(id);
 
   if (!user) {
     notFound();
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">
-        User Overview
-      </h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="User Details"
+        description={user.full_name}
+      />
 
       <UserDetails user={user} />
     </div>

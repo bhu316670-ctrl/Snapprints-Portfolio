@@ -1,12 +1,8 @@
 "use client";
+import type { Alert } from "@/services/dashboard.service";
 
-interface Alert {
-  id: number;
-  machine_id: string;
-  alert_type: string;
- severity: string;
-  message: string;
-}
+
+
 
 interface Props {
   alerts: Alert[];

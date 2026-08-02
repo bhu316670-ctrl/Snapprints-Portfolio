@@ -61,7 +61,11 @@ export default function AuthProvider({
         setUser(null);
         return;
       }
+      const savedUser = localStorage.getItem("user");
 
+if (savedUser) {
+  setUser(JSON.parse(savedUser));
+}
       const response = await authService.me();
 
       setUser(response.user);
@@ -112,6 +116,7 @@ export default function AuthProvider({
   }
 
   async function logout() {
+    localStorage.removeItem("user");
     setLoading(true);
 
     try {

@@ -7,14 +7,14 @@ import {
   LogOut,
   UserCircle2,
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuth();
 
+  const { user, logout } = useAuth();
 
   const titles: Record<string, string> = {
     "/admin/dashboard": "Dashboard",
@@ -23,8 +23,8 @@ export default function AdminHeader() {
     "/admin/revenue": "Revenue",
     "/admin/withdrawals": "Withdraw Requests",
     "/admin/payouts": "Payouts",
-    "/admin/reports": "Reports",
     "/admin/bank-accounts": "Bank Accounts",
+    "/admin/reports": "Reports",
     "/admin/settings": "Settings",
   };
 
@@ -36,13 +36,14 @@ export default function AdminHeader() {
     }
   });
 
- async function handleLogout() {
-  await logout();
-  router.push("/admin-login"); // or "/user-login" in the user header
-}
+  async function handleLogout() {
+    await logout();
+
+    router.replace("/public/admin-login");
+  }
 
   return (
-    <header className="sticky top-0 z-50 h-16 bg-white border-b flex items-center justify-between px-6">
+    <header className="sticky top-0 z-50 h-16 bg-white border-b flex items-center justify-between px-6 shadow-sm">
 
       {/* Left */}
 
@@ -58,7 +59,7 @@ export default function AdminHeader() {
 
         {/* Search */}
 
-        <div className="relative hidden md:block">
+        <div className="relative hidden lg:block">
 
           <Search
             size={18}
@@ -75,31 +76,31 @@ export default function AdminHeader() {
 
         {/* Notification */}
 
-        <button className="relative p-2 rounded-lg hover:bg-gray-100">
+        <button className="relative rounded-lg p-2 hover:bg-gray-100">
 
           <Bell size={22} />
 
-          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
+          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
 
         </button>
 
-        {/* Admin */}
+        {/* Logged In Admin */}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
 
           <UserCircle2
-            size={34}
+            size={36}
             className="text-slate-700"
           />
 
           <div className="hidden md:block">
 
             <p className="font-semibold">
-              Admin
+              {user?.name ?? "Administrator"}
             </p>
 
             <p className="text-xs text-gray-500">
-              Administrator
+              {user?.email}
             </p>
 
           </div>
@@ -109,8 +110,8 @@ export default function AdminHeader() {
         {/* Logout */}
 
         <button
-          onClick={logout}
-          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+          onClick={handleLogout}
+          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
         >
           <LogOut size={18} />
 

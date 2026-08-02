@@ -1,29 +1,35 @@
 import { notFound } from "next/navigation";
+
+import PageHeader from "@/components/ui/PageHeader";
 import UserForm from "@/components/admin/users/UserForm";
-import { users } from "@/lib/dummyUsers";
+
+import userService from "@/services/user.service";
+
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
 export default async function EditUserPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: Props) {
   const { id } = await params;
 
-  const user = users.find((u) => u.id === Number(id));
+  const user = await userService.getUser(id);
 
   if (!user) {
     notFound();
   }
 
   return (
-    <div>
-
-      <h1 className="text-3xl font-bold mb-6">
-        Edit User
-      </h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="Edit User"
+        description={user.full_name}
+      />
 
       <UserForm user={user} />
-
     </div>
   );
 }

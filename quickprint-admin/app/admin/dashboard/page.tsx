@@ -35,7 +35,7 @@ export default function DashboardPage() {
         onChange={setPeriod}
       />
 
-      
+      <RevenueChart period={period} />
 
       <RecentJobs jobs={jobs} />
 

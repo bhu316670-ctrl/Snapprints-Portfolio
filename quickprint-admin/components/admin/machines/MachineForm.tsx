@@ -5,8 +5,13 @@ import { useRouter } from "next/navigation";
 
 import machineService from "@/services/machine.service";
 
+import {
+  Machine,
+  MachinePayload,
+} from "@/services/machine.service";
+
 interface Props {
-  machine?: any;
+  machine?: Machine;
 }
 
 export default function MachineForm({

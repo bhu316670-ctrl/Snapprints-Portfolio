@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { RevenuePeriod } from "@/components/admin/revenue/RevenueFilters";
 
 export interface Revenue {
   day: string;
@@ -6,18 +7,20 @@ export interface Revenue {
 }
 
 class RevenueService {
-
   async getRevenue(
-    period: "today" | "week" | "month" | "year"
-  ) {
-
-    const { data } = await api.get(
-      `/admin/revenue?period=${period}`
+    period: RevenuePeriod = "week"
+  ): Promise<Revenue[]> {
+    const { data } = await api.get<Revenue[]>(
+      "/admin/revenue",
+      {
+        params: {
+          period,
+        },
+      }
     );
 
     return data;
   }
-
 }
 
 export default new RevenueService();

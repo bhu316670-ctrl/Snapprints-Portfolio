@@ -2,12 +2,23 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { users } from "@/lib/dummyUsers";
+
+import { User } from "@/services/user.service";
+
 import UserRow from "./UserRow";
+
 import SearchBox from "@/components/ui/SearchBox";
 import DataTable from "@/components/ui/DataTable";
 
-export default function UserTable() {
+interface Props {
+  users: User[];
+  loading?: boolean;
+}
+
+export default function UserTable({
+  users,
+  loading = false,
+}: Props) {
   const [search, setSearch] = useState("");
 
   const filteredUsers = useMemo(() => {
@@ -15,23 +26,21 @@ export default function UserTable() {
 
     return users.filter((user) => {
       return (
-        user.fullName.toLowerCase().includes(value) ||
+        user.full_name.toLowerCase().includes(value) ||
         user.email.toLowerCase().includes(value) ||
-        user.phone.includes(value)
+        (user.phone ?? "").toLowerCase().includes(value)
       );
     });
-  }, [search]);
+  }, [users, search]);
 
   return (
     <div>
-
       <div className="flex justify-between items-center mb-6">
-
         <SearchBox
-  value={search}
-  onChange={setSearch}
-  placeholder="Search machines..."
-/>
+          value={search}
+          onChange={setSearch}
+          placeholder="Search users..."
+        />
 
         <Link
           href="/admin/users/add"
@@ -39,34 +48,35 @@ export default function UserTable() {
         >
           + Add User
         </Link>
-
       </div>
 
-    <DataTable
-  loading={false}
-  empty={filteredUsers.length === 0}
-  emptyMessage="No users found."
->
-  <table className="w-full">
-    <thead className="bg-gray-100">
-      <tr>
-        <th className="text-left px-4 py-3">Name</th>
-        <th className="text-left px-4 py-3">Email</th>
-        <th className="text-left px-4 py-3">Phone</th>
-        <th className="text-center px-4 py-3">Machines</th>
-        <th className="text-left px-4 py-3">Status</th>
-        <th className="text-left px-4 py-3">Actions</th>
-      </tr>
-    </thead>
+      <DataTable
+        loading={loading}
+        empty={filteredUsers.length === 0}
+        emptyMessage="No users found."
+      >
+        <table className="w-full">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="text-left px-4 py-3">Name</th>
+              <th className="text-left px-4 py-3">Email</th>
+              <th className="text-left px-4 py-3">Phone</th>
+              <th className="text-left px-4 py-3">Business</th>
+              <th className="text-left px-4 py-3">Status</th>
+              <th className="text-left px-4 py-3">Actions</th>
+            </tr>
+          </thead>
 
-    <tbody>
-      {filteredUsers.map((user) => (
-        <UserRow key={user.id} user={user} />
-      ))}
-    </tbody>
-  </table>
-</DataTable>
-
+          <tbody>
+            {filteredUsers.map((user) => (
+              <UserRow
+                key={user.id}
+                user={user}
+              />
+            ))}
+          </tbody>
+        </table>
+      </DataTable>
     </div>
   );
 }

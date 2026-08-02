@@ -13,9 +13,11 @@ import StatusBadge from "@/components/ui/StatusBadge";
 
 export default function MachineDetailsPage() {
 
-  const params = useParams();
+  const params = useParams<{
+  id: string;
+}>();
 
-  const machineId = params.id as string;
+const machineId = params.id;
 
   const [machine, setMachine] =
     useState<Machine | null>(null);

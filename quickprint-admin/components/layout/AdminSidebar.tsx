@@ -7,10 +7,10 @@ import {
   LayoutDashboard,
   Cpu,
   Users,
-  Landmark,
   IndianRupee,
   Wallet,
   CreditCard,
+  Landmark,
   FileText,
   Settings,
 } from "lucide-react";
@@ -40,11 +40,6 @@ const menu = [
         href: "/admin/users",
         icon: Users,
       },
-      {
-        name: "Bank Accounts",
-        href: "/admin/bank-accounts",
-        icon: Landmark,
-      },
     ],
   },
 
@@ -66,6 +61,17 @@ const menu = [
         href: "/admin/payouts",
         icon: CreditCard,
       },
+      {
+        name: "Bank Accounts",
+        href: "/admin/bank-accounts",
+        icon: Landmark,
+      },
+    ],
+  },
+
+  {
+    title: "Analytics",
+    items: [
       {
         name: "Reports",
         href: "/admin/reports",
@@ -90,35 +96,35 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-72 min-h-screen bg-slate-900 text-white flex flex-col">
+    <aside className="flex min-h-screen w-64 flex-col bg-slate-900 text-white">
 
       {/* Logo */}
 
       <div className="border-b border-slate-800 p-6">
 
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold tracking-wide">
           SnapPrint
         </h1>
 
-        <p className="text-sm text-slate-400 mt-1">
-          Admin Panel
+        <p className="mt-1 text-sm text-slate-400">
+          Administration
         </p>
 
       </div>
 
       {/* Navigation */}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto py-4">
 
         {menu.map((section) => (
 
           <div
             key={section.title}
-            className="mt-6"
+            className="mb-6"
           >
 
             {section.title && (
-              <p className="px-6 mb-3 text-xs uppercase tracking-wider text-slate-500">
+              <p className="mb-3 px-6 text-xs uppercase tracking-widest text-slate-500">
                 {section.title}
               </p>
             )}
@@ -137,14 +143,11 @@ export default function AdminSidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all
-
-                    ${
+                    className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all duration-200 ${
                       active
-                        ? "bg-blue-600 text-white shadow"
+                        ? "bg-blue-600 text-white shadow-md"
                         : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                    }
-                    `}
+                    }`}
                   >
                     <Icon size={20} />
 
@@ -165,9 +168,13 @@ export default function AdminSidebar() {
 
       <div className="border-t border-slate-800 p-5">
 
-        <div className="text-xs text-slate-500">
-          Version 1.0
-        </div>
+        <p className="text-sm font-medium">
+          SnapPrint Dashboard
+        </p>
+
+        <p className="mt-1 text-xs text-slate-500">
+          Version 1.0.0
+        </p>
 
       </div>
 

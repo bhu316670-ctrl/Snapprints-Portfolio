@@ -7,8 +7,10 @@ interface Job {
   created_at: string;
 }
 
+import type { LiveJob } from "@/services/dashboard.service";
+
 interface Props {
-  jobs: Job[];
+  jobs: LiveJob[];
 }
 
 export default function RecentJobs({

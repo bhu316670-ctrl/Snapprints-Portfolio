@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { RevenuePeriod } from "@/components/admin/revenue/RevenueFilters";
 
 export interface DashboardStats {
   jobsToday: number;
@@ -34,18 +35,32 @@ class DashboardService {
     return data;
   }
 
-  async getRevenue(): Promise<RevenuePoint[]> {
-    const { data } = await api.get("/admin/revenue");
+  async getRevenue(
+    period: RevenuePeriod = "week"
+  ): Promise<RevenuePoint[]> {
+    const { data } = await api.get(
+      "/admin/revenue",
+      {
+        params: { period },
+      }
+    );
+
     return data;
   }
 
   async getLiveJobs(): Promise<LiveJob[]> {
-    const { data } = await api.get("/admin/live-jobs");
+    const { data } = await api.get(
+      "/admin/live-jobs"
+    );
+
     return data;
   }
 
   async getAlerts(): Promise<Alert[]> {
-    const { data } = await api.get("/admin/alerts");
+    const { data } = await api.get(
+      "/admin/alerts"
+    );
+
     return data;
   }
 }

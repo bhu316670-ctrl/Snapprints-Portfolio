@@ -7,13 +7,10 @@ import {
   Cpu,
 } from "lucide-react";
 
+import type { DashboardStats as DashboardStatsType } from "@/services/dashboard.service";
+
 interface Props {
-  stats: {
-    jobsToday: number;
-    revenueToday: number;
-    machinesOnline: number;
-    machinesTotal: number;
-  } | null;
+  stats: DashboardStatsType | null;
 }
 
 export default function DashboardStats({

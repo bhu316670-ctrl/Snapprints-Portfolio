@@ -22,62 +22,63 @@ export interface Machine {
 
 export interface MachinePayload {
   name: string;
-
   locationName: string;
-
   address: string;
-
   city: string;
-
   state: string;
-
   pincode: string;
-
   latitude?: number;
-
   longitude?: number;
 }
 
 class MachineService {
-  async getMachines() {
-    const { data } = await api.get("/admin/machineinfo");
+  async getMachines(): Promise<Machine[]> {
+    const { data } = await api.get<Machine[]>(
+      "/admin/machineinfo"
+    );
+
     return data;
   }
 
-  async getMachine(machineId: string) {
+  async getMachine(
+    machineId: string
+  ): Promise<Machine | undefined> {
     const machines = await this.getMachines();
 
     return machines.find(
-      (m: Machine) => m.machine_id === machineId
+      (m) => m.machine_id === machineId
     );
   }
 
-  async createMachine(payload: MachinePayload) {
-    const { data } = await api.post(
+  async createMachine(
+    payload: MachinePayload
+  ): Promise<Machine> {
+    const { data } = await api.post<Machine>(
       "/admin/createmachine",
       payload
     );
 
     return data;
   }
-async deleteMachine(machineId: string) {
-  const { data } = await api.delete(
-    `/admin/machines/${machineId}`
-  );
-
-  return data;
-} 
 
   async updateMachine(
     machineId: string,
     payload: MachinePayload
-  ) {
-    const { data } = await api.put(
+  ): Promise<Machine> {
+    const { data } = await api.put<Machine>(
       `/admin/machines/${machineId}`,
       payload
     );
 
     return data;
+  }
+
+  async deleteMachine(
+    machineId: string
+  ): Promise<void> {
+    await api.delete(
+      `/admin/machines/${machineId}`
+    );
   }
 }
 

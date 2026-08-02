@@ -12,7 +12,9 @@ import machineService, {
 
 export default function EditMachinePage() {
 
-  const { id } = useParams();
+  const { id } = useParams<{
+  id: string;
+}>();
 
   const [machine, setMachine] =
     useState<Machine | null>(null);
