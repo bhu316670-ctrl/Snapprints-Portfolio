@@ -3,13 +3,11 @@ import axios from "axios";
 const api = axios.create({
   baseURL:
     process.env.NEXT_PUBLIC_API_URL ||
-    "http://localhost:5000/api",
+    "https://snapprints-production-b39c.up.railway.app/api",
 
   headers: {
     "Content-Type": "application/json",
   },
-
-  withCredentials: true,
 });
 
 api.interceptors.request.use(
@@ -32,9 +30,7 @@ api.interceptors.response.use(
 
   (error) => {
     if (error.response?.status === 401) {
-      console.warn("Unauthorized");
-
-      // Refresh-token logic will be added later.
+      localStorage.removeItem("token");
     }
 
     return Promise.reject(error);

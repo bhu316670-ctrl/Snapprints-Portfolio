@@ -11,11 +11,9 @@ export default function AdminLoginPage() {
   const { loginAsAdmin } = useAuth();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
 
   async function handleSubmit(
@@ -23,9 +21,8 @@ export default function AdminLoginPage() {
   ) {
     e.preventDefault();
 
-    setLoading(true);
-
     setError("");
+    setLoading(true);
 
     try {
       await loginAsAdmin({
@@ -34,26 +31,31 @@ export default function AdminLoginPage() {
       });
 
       router.replace("/admin/dashboard");
+
     } catch (err: any) {
+
       setError(
         err?.response?.data?.message ||
-          "Login failed"
+          "Invalid email or password"
       );
+
     } finally {
+
       setLoading(false);
+
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+      <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-8">
 
-        <h1 className="text-3xl font-bold text-center mb-2">
+        <h1 className="text-3xl font-bold text-center">
           Admin Login
         </h1>
 
-        <p className="text-gray-500 text-center mb-6">
+        <p className="text-gray-500 text-center mt-2 mb-8">
           Sign in to SnapPrint Admin Dashboard
         </p>
 
@@ -64,7 +66,7 @@ export default function AdminLoginPage() {
 
           <div>
 
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 font-medium">
               Email
             </label>
 
@@ -75,14 +77,14 @@ export default function AdminLoginPage() {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              className="w-full border rounded-lg p-3"
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
           </div>
 
           <div>
 
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 font-medium">
               Password
             </label>
 
@@ -93,7 +95,7 @@ export default function AdminLoginPage() {
               onChange={(e) =>
                 setPassword(e.target.value)
               }
-              className="w-full border rounded-lg p-3"
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
           </div>
@@ -105,8 +107,9 @@ export default function AdminLoginPage() {
           )}
 
           <button
+            type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-3 transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-3 transition disabled:opacity-50"
           >
             {loading
               ? "Signing In..."

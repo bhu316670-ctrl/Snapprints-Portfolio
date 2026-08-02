@@ -1,5 +1,4 @@
 import api from "@/lib/axios";
-
 import {
   LoginResponse,
   User,
@@ -50,7 +49,9 @@ class AuthService {
   }
 
   async logout(): Promise<void> {
-    await api.post("/auth/logout");
+    try {
+      await api.post("/auth/logout");
+    } catch (_) {}
 
     localStorage.removeItem("token");
   }

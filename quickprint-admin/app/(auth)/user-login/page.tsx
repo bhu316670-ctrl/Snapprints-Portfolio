@@ -11,11 +11,9 @@ export default function UserLoginPage() {
   const { loginAsUser } = useAuth();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
 
   async function handleSubmit(
@@ -23,36 +21,42 @@ export default function UserLoginPage() {
   ) {
     e.preventDefault();
 
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
+
       await loginAsUser({
         email,
         password,
       });
 
       router.replace("/user/dashboard");
+
     } catch (err: any) {
+
       setError(
         err?.response?.data?.message ||
-          "Login failed"
+          "Invalid email or password"
       );
+
     } finally {
+
       setLoading(false);
+
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+      <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-8">
 
-        <h1 className="text-3xl font-bold text-center mb-2">
+        <h1 className="text-3xl font-bold text-center">
           User Login
         </h1>
 
-        <p className="text-gray-500 text-center mb-6">
+        <p className="text-gray-500 text-center mt-2 mb-8">
           Sign in to your SnapPrint account
         </p>
 
@@ -63,7 +67,7 @@ export default function UserLoginPage() {
 
           <div>
 
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 font-medium">
               Email
             </label>
 
@@ -74,15 +78,14 @@ export default function UserLoginPage() {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email"
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
           </div>
 
           <div>
 
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 font-medium">
               Password
             </label>
 
@@ -93,14 +96,13 @@ export default function UserLoginPage() {
               onChange={(e) =>
                 setPassword(e.target.value)
               }
-              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your password"
+              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
           </div>
 
           {error && (
-            <div className="text-sm text-red-600">
+            <div className="text-red-600 text-sm">
               {error}
             </div>
           )}

@@ -1,11 +1,16 @@
-export type UserRole = "admin" | "user";
+export type UserType = "ADMIN" | "USER";
 
 export interface User {
   id: number;
-  fullName: string;
+
+  name?: string;
+  full_name?: string;
+
   email: string;
-  phone?: string;
-  role: UserRole;
+
+  role?: "ADMIN";
+
+  type: UserType;
 }
 
 export interface LoginRequest {
@@ -14,18 +19,13 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  success: boolean;
+  message: string;
   token: string;
-  refreshToken: string;
   user: User;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  refreshToken: string | null;
-  loading: boolean;
-}
-
 export interface ApiError {
+  success: boolean;
   message: string;
 }

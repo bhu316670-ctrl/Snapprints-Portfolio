@@ -10,7 +10,10 @@ import {
 
 import authService from "@/services/auth.service";
 
-import { LoginRequest, User } from "@/types/auth";
+import {
+  LoginRequest,
+  User,
+} from "@/types/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -30,18 +33,19 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(
-  null
-);
+const AuthContext =
+  createContext<AuthContextType | null>(null);
 
 export default function AuthProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] =
+    useState<User | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   const authenticated = !!user;
 
@@ -61,7 +65,7 @@ export default function AuthProvider({
       const response = await authService.me();
 
       setUser(response.user);
-    } catch (error) {
+    } catch (err) {
       localStorage.removeItem("token");
       setUser(null);
     } finally {
@@ -75,12 +79,14 @@ export default function AuthProvider({
     setLoading(true);
 
     try {
-      const response = await authService.adminLogin(
-        payload.email,
-        payload.password
-      );
+      const response =
+        await authService.adminLogin(
+          payload.email,
+          payload.password
+        );
 
       setUser(response.user);
+
     } finally {
       setLoading(false);
     }
@@ -92,23 +98,29 @@ export default function AuthProvider({
     setLoading(true);
 
     try {
-      const response = await authService.userLogin(
-        payload.email,
-        payload.password
-      );
+      const response =
+        await authService.userLogin(
+          payload.email,
+          payload.password
+        );
 
       setUser(response.user);
+
     } finally {
       setLoading(false);
     }
   }
 
   async function logout() {
+    setLoading(true);
+
     try {
       await authService.logout();
-    } finally {
-      localStorage.removeItem("token");
+
       setUser(null);
+
+    } finally {
+      setLoading(false);
     }
   }
 
