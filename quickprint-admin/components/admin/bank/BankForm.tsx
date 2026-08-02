@@ -81,7 +81,7 @@ export default function BankForm({ initialData }: Props) {
 
           {users.map((user) => (
             <option key={user.id} value={user.id}>
-              {user.name} ({user.email})
+               ({user.email})
             </option>
           ))}
         </select>

@@ -6,16 +6,17 @@ import useDashboard from "@/hooks/useDashboard";
 
 import DashboardStats from "@/components/admin/dashboard/DashboardStats";
 import RevenueChart from "@/components/admin/dashboard/RevenueChart";
-import RevenueFilters from "@/components/admin/revenue/RevenueFilters";
+import RevenueFilters, {
+  RevenuePeriod,
+} from "@/components/admin/revenue/RevenueFilters";
 import RecentJobs from "@/components/admin/dashboard/RecentJobs";
 import AlertList from "@/components/admin/dashboard/AlertList";
 
 export default function DashboardPage() {
   const { loading, stats, jobs, alerts } = useDashboard();
 
-  const [period, setPeriod] = useState<
-    "today" | "week" | "month" | "year"
-  >("week");
+  const [period, setPeriod] =
+    useState<RevenuePeriod>("week");
 
   if (loading) {
     return (
@@ -27,7 +28,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-
       <DashboardStats stats={stats} />
 
       <RevenueFilters
@@ -35,14 +35,11 @@ export default function DashboardPage() {
         onChange={setPeriod}
       />
 
-      <RevenueChart
-        period={period}
-      />
+      
 
       <RecentJobs jobs={jobs} />
 
       <AlertList alerts={alerts} />
-
     </div>
   );
 }
