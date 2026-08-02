@@ -12,9 +12,7 @@ import {
 
 import useRevenue from "@/hooks/useRevenue";
 
-interface RevenueChartProps {
-  // period: "today" | "week" | "month" | "year";
-}
+
 import { RevenuePeriod } from "@/components/admin/revenue/RevenueFilters";
 
 interface RevenueChartProps {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -31,26 +32,23 @@ export default function AdminLoginPage() {
       });
 
       router.replace("/admin/dashboard");
-
-    } catch (err: any) {
-
-      setError(
-        err?.response?.data?.message ||
-          "Invalid email or password"
-      );
-
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message ??
+            "Invalid email or password"
+        );
+      } else {
+        setError("Something went wrong.");
+      }
     } finally {
-
       setLoading(false);
-
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
       <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-8">
-
         <h1 className="text-3xl font-bold text-center">
           Admin Login
         </h1>
@@ -63,9 +61,7 @@ export default function AdminLoginPage() {
           onSubmit={handleSubmit}
           className="space-y-5"
         >
-
           <div>
-
             <label className="block mb-2 font-medium">
               Email
             </label>
@@ -79,11 +75,9 @@ export default function AdminLoginPage() {
               }
               className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
-
           </div>
 
           <div>
-
             <label className="block mb-2 font-medium">
               Password
             </label>
@@ -97,7 +91,6 @@ export default function AdminLoginPage() {
               }
               className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
-
           </div>
 
           {error && (
@@ -111,15 +104,10 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-3 transition disabled:opacity-50"
           >
-            {loading
-              ? "Signing In..."
-              : "Login"}
+            {loading ? "Signing In..." : "Login"}
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }
