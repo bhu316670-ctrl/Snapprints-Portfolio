@@ -7,31 +7,32 @@ import {
   Copy,
 } from "lucide-react";
 
+
 import PageHeader from "@/components/ui/PageHeader";
 
 interface Props {
-  params: {
+  params: Promise<{
     machineId: string;
-  };
+  }>;
 }
 
-export default function MachineRevenueReportPage({
+export default async function MachineRevenueReportPage({
   params,
 }: Props) {
-  const { machineId } = params;
+
+  const { machineId } = await params;
 
   return (
     <div className="space-y-6">
 
       <PageHeader
         title={`Revenue Report - ${machineId}`}
-        description="Machine-wise revenue and printing statistics."
+        description="Machine-wise revenue report"
         action={
           <Link
             href="/admin/revenue"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg"
           >
-            <ArrowLeft size={18} />
             Back
           </Link>
         }
